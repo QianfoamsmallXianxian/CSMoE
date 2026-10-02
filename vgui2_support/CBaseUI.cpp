@@ -20,7 +20,7 @@
 #include "vgui/ISystem.h"
 #include "IClientVGUI.h"
 #include "vgui/IInputInternal.h"
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "vgui_controls/Panel.h"
 #include "BaseUISurface.h"
 #include "keydefs.h"

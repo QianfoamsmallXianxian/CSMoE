@@ -9,7 +9,7 @@
 #include "pm_math.h"
 
 #include "vgui/ISurface.h"
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 
 using namespace cl;
 

@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "UtlVector.h"
+#include "tier1/utlvector.h"
 #include "UtlSymbol.h"
 
 #include <vgui_controls/PropertyPage.h>

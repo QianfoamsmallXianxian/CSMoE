@@ -10,7 +10,7 @@
 #include "ivoicetweak.h"
 #include "CvarToggleCheckButton.h"
 #include "tier1/KeyValues.h"
-#include "tier1/UtlVector.h"
+#include "tier1/utlvector.h"
 
 CUtlVector<char *> g_vLanguageList;
 

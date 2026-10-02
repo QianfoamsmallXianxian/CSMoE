@@ -15,7 +15,7 @@
 #include "EngineInterface.h"
 //#include "vgui_controls/consoledialog.h"
 #include <Color.h>
-#include "UtlVector.h"
+#include "tier1/utlvector.h"
 #include "vgui_controls/Frame.h"
 #include "cvardef.h"
 

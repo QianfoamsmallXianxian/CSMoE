@@ -9,7 +9,7 @@
 #include "vgui/IInput.h"
 #include "vgui/IInputInternal.h"
 #include "vgui/Cursor.h"
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 
 #include "vgui_surfacelib/FontManager.h"
 

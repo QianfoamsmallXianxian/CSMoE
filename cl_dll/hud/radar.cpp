@@ -24,7 +24,7 @@ GNU General Public License for more details.
 #include "legacy/hud_radar_legacy.h"
 #include "modern/hud_radar_modern.h"
 
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "vgui/ILocalize.h"
 
 namespace cl {

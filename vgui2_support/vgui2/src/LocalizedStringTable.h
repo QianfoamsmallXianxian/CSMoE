@@ -5,7 +5,7 @@
 
 #include <tier1/UtlRBTree.h>
 #include <tier1/UtlSymbol.h>
-#include <tier1/UtlVector.h>
+#include <tier1/utlvector.h>
 
 #include <vgui/ILocalize.h>
 

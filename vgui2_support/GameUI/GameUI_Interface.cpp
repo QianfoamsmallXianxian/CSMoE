@@ -7,7 +7,7 @@
 #include <tier0/dbg.h>
 
 #include "interface.h"
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "vgui_controls/MessageBox.h"
 
 #include "KeyValues.h"

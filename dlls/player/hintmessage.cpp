@@ -4,7 +4,7 @@
 #include "player.h"
 
 #include "shared_util.h"
-#include "UtlVector.h"
+#include "tier1/utlvector.h"
 
 namespace sv {
 

@@ -5,7 +5,7 @@
 #include "vgui/IScheme.h"
 #include "vgui/ISurface.h"
 #include "vgui/ILocalize.h"
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "xash3d_types.h"
 
 #include <string>

@@ -10,7 +10,7 @@
 #include "vgui_controls/MenuItem.h"
 #include "vgui_controls/messagedialog.h"
 #include "KeyValues.h"
-#include "UtlVector.h"
+#include "tier1/utlvector.h"
 //#include "tier1/CommandBuffer.h"
 
 class CGameMenu;

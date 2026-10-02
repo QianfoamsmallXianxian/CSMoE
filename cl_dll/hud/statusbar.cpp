@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include "draw_util.h"
 
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "vgui/ILocalize.h"
 
 namespace cl {

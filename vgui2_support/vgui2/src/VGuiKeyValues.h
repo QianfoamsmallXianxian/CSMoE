@@ -3,7 +3,7 @@
 
 #include <tier1/MemPool.h>
 #include <tier1/UtlRBTree.h>
-#include <tier1/UtlVector.h>
+#include <tier1/utlvector.h>
 
 #include <vgui/IKeyValues.h>
 

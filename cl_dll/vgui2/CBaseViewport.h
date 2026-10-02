@@ -3,7 +3,7 @@
 
 #include "vgui/IClientVGUI.h"
 
-#include "tier1/UtlVector.h"
+#include "tier1/utlvector.h"
 
 #include "IViewport.h"
 #include "vgui_controls/EditablePanel.h"

@@ -7,7 +7,7 @@
 
 #include "vgui_controls/WizardSubPanel.h"
 #include "vgui_controls/Button.h"
-#include "UtlVector.h"
+#include "tier1/utlvector.h"
 #include "mouseoverpanelbutton.h"
 
 #include "weapons_moe_buy.h"

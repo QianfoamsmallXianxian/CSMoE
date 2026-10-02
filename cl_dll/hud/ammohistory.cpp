@@ -28,7 +28,7 @@
 #include "draw_util.h"
 #include "legacy/hud_scoreboard_legacy.h"
 
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "vgui/ILocalize.h"
 
 namespace cl {

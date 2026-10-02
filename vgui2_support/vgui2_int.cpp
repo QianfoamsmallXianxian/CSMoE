@@ -12,7 +12,7 @@
 #include <FileSystem.h>
 #include "tier1/interface.h"
 #include "vgui/ISurface.h"
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "render_api.h"
 #include "BaseUISurface.h"
 #include "GameUI/IGameConsole.h"

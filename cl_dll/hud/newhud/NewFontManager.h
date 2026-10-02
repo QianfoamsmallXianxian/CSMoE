@@ -2,7 +2,7 @@
 #ifndef NEWFONTMANAGER_H
 #define NEWFONTMANAGER_H
 
-#include "vgui_controls/controls.h"
+#include "vgui_controls/Controls.h"
 #include "vgui/IScheme.h"
 
 

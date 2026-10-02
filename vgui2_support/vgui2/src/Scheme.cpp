@@ -19,7 +19,7 @@
 #include <vgui_controls/Controls.h>
 
 #include <tier1/KeyValues.h>
-#include <tier1/UtlVector.h>
+#include <tier1/utlvector.h>
 #include <tier1/UtlRBTree.h>
 #include <tier1/UtlSymbol.h>
 #include "Border.h"
