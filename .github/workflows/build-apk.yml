@@ -26,7 +26,7 @@ jobs:
       - name: Init submodules
         run: |
           set +e
-          SKIP="3rdparty/angle 3rdparty/angle-static-cmake 3rdparty/bullet3 3rdparty/oneTBB"
+          SKIP="3rdparty/angle 3rdparty/angle-static-cmake 3rdparty/bullet3 3rdparty/oneTBB 3rdparty/boost-mysql"
           PATHS=$(git config -f .gitmodules --get-regexp '^submodule\..*\.path$' | awk '{print $2}')
           for m in $PATHS; do
             skip=0

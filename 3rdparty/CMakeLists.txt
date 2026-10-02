@@ -19,7 +19,7 @@ set(DIRECTX OFF CACHE BOOL "" FORCE) # win10 arm dont have dx8
 set(LIBC ON CACHE BOOL "" FORCE) # win10 arm dont have dx8
 set(HIDAPI OFF CACHE BOOL "" FORCE) # win10 arm dont have dx8
 set(SDL_CMAKE_DEBUG_POSTFIX "" CACHE STRING "" FORCE)
-add_subdirectory(sdl2 EXCLUDE_FROM_ALL)
+add_subdirectory(SDL2 EXCLUDE_FROM_ALL)
 target_link_libraries(3rdparty-sdl2 INTERFACE SDL2-static)
 if(IOS OR ANDROID)
 	target_link_libraries(3rdparty-sdl2 INTERFACE SDL2main)
@@ -66,7 +66,7 @@ add_library(qrcode INTERFACE)
 target_sources(qrcode INTERFACE ${CMAKE_SOURCE_DIR}/3rdparty/QRCode/QRCode.cpp)
 target_include_directories(qrcode INTERFACE ${CMAKE_SOURCE_DIR}/3rdparty/QRCode)
 
-set(FETCHCONTENT_SOURCE_DIR_BOOST ${CMAKE_SOURCE_DIR}/3rdparty/boost_1_77_0)
+# set(FETCHCONTENT_SOURCE_DIR_BOOST ${CMAKE_SOURCE_DIR}/3rdparty/boost_1_77_0)
 add_subdirectory(boost-cmake EXCLUDE_FROM_ALL)
 
 add_library(Boost::pfr ALIAS Boost::boost)
