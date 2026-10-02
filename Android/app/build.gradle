@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+
+def hasSigning = System.getenv("RELEASE_KEYSTORE_PATH") != null &&
+                 System.getenv("RELEASE_KEYSTORE_PASSWORD") != null &&
+                 System.getenv("RELEASE_KEY_ALIAS") != null &&
+                 System.getenv("RELEASE_KEY_PASSWORD") != null
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "in.celest.xash3d.csbtem"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 2851
+        versionName "v22-citrus"
+
+        externalNativeBuild {
+            cmake {
+                arguments "-DXASH_SDL=1",
+                          "-DXASH_GL4ES=1",
+                          "-DXASH_STATIC_GAMELIB=1",
+                          "-DANDROID_STL=c++_shared"
+                version "3.18.1"
+                cppFlags "-fexceptions", "-frtti"
+            }
+        }
+
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
+
+    signingConfigs {
+        if (hasSigning) {
+            release {
+                storeFile file(System.getenv("RELEASE_KEYSTORE_PATH"))
+                storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("RELEASE_KEY_ALIAS")
+                keyPassword System.getenv("RELEASE_KEY_PASSWORD")
+                v1SigningEnabled true
+                v2SigningEnabled true
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+            if (hasSigning) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('../../CMakeLists.txt')
+            version "3.18.1"
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', '../../CSMoE-Full']
+        }
+    }
+
+    ndkVersion '23.2.8568313'
+
+    aaptOptions {
+        noCompress = ['.tga', '.astc', '.png', '.jpg', '.jpeg', '.wav', '.mp3', '.ogg', '.zip']
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+        doNotStrip "**/libc++_shared.so"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        disable 'MissingTranslation', 'ExpiredTargetSdkVersion'
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "CSMoE-${variant.name}-${variant.versionName}.apk"
+        }
+    }
+}
+
+dependencies {
+}

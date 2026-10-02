@@ -1,0 +1,7 @@
+-keep class in.celest.xash3d.** { *; }
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+-keep class org.libsdl.app.** { *; }
+-dontwarn android.support.**
+-dontwarn com.tencent.**
