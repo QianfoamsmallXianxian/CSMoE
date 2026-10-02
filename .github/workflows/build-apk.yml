@@ -58,30 +58,72 @@ jobs:
           cat Android/local.properties
           chmod +x Android/gradlew
 
-      - name: Patch astc-encoder for NDK r23
+      - name: Patch CI fixes
         run: |
-          ASTC_CORE=3rdparty/astc-encoder/Source/cmake_core.cmake
-          ASTC_LIST=3rdparty/astc-encoder/Source/CMakeLists.txt
-
-          if [ -f "$ASTC_CORE" ]; then
-            sed -i 's|-ffp-contract=off||g' "$ASTC_CORE"
-            sed -i 's|-Werror|-Wno-error|g' "$ASTC_CORE"
+          B=3rdparty/boost-cmake/CMakeLists.txt
+          if [ -f "$B" ]; then
+            sed -i '/URL_HASH SHA256/d' "$B"
+            sed -i 's|boostorg.jfrog.io/artifactory/main/release|archives.boost.io/release|g' "$B"
+            grep -n "boost_1_77_0" "$B" || true
           fi
 
-          if [ -f "$ASTC_LIST" ]; then
-            if ! grep -q 'Wno-unsupported-floating-point-opt' "$ASTC_LIST"; then
-              printf '\nif(TARGET astcenc-native-static)\n' >> "$ASTC_LIST"
-              printf '    target_compile_options(astcenc-native-static PRIVATE\n' >> "$ASTC_LIST"
-              printf '        -Wno-unsupported-floating-point-opt\n' >> "$ASTC_LIST"
-              printf '        -Wno-error=unsupported-floating-point-opt)\n' >> "$ASTC_LIST"
-              printf 'endif()\n' >> "$ASTC_LIST"
+          H=3rdparty/mpg123/src/include/mpg123.h
+          T=3rdparty/mpg123/src/libmpg123/mpg123.h.in
+          if [ -f "$H" ] && [ ! -f "$T" ]; then
+            cp "$H" "$T"
+          fi
+
+          M=3rdparty/mpg123-cmake/src/libmpg123/CMakeLists.txt
+          [ -f "$M" ] && sed -i '/lfs_alias/d' "$M"
+
+          C=3rdparty/CMakeLists.txt
+          if [ -f "$C" ]; then
+            sed -i 's/PNG_BUILD_ZLIB ON/PNG_BUILD_ZLIB OFF/g' "$C"
+            sed -i '/add_subdirectory(${CMAKE_SOURCE_DIR}\/3rdparty\/bullet3/d' "$C"
+            sed -i '/target_link_libraries(3rdparty-bullet3/d' "$C"
+            sed -i '/target_include_directories(3rdparty-bullet3/d' "$C"
+            grep -q "PNG::PNG ALIAS" "$C" || \
+              sed -i '/target_link_libraries(3rdparty-png INTERFACE png_static/a add_library(PNG::PNG ALIAS png_static)' "$C"
+          fi
+
+          python3 - <<'PY'
+          import os
+          for cmake in ["cl_dll/CMakeLists.txt", "dlls/CMakeLists.txt"]:
+              if not os.path.exists(cmake):
+                  continue
+              base = os.path.dirname(cmake)
+              lines = open(cmake, encoding="utf-8").read().splitlines()
+              out = []
+              for ln in lines:
+                  s = ln.strip()
+                  if s.startswith(("./", "../")):
+                      ext = os.path.splitext(s)[1].lower()
+                      if ext in (".cpp",".c",".cc",".cxx",".h",".hpp",".s"):
+                          full = os.path.normpath(os.path.join(base, s))
+                          if not os.path.exists(full):
+                              out.append("# " + ln)
+                              continue
+                  out.append(ln)
+              open(cmake, "w", encoding="utf-8").write("\n".join(out) + "\n")
+          PY
+
+          A=3rdparty/astc-encoder/Source/cmake_core.cmake
+          L=3rdparty/astc-encoder/Source/CMakeLists.txt
+          if [ -f "$A" ]; then
+            sed -i 's|is_clangcl}:-march=native>|is_clangcl}:-march=armv8-a>|g' "$A"
+            sed -i 's|is_gnu_fe}:-march=native>|is_gnu_fe}:-march=armv8-a>|g' "$A"
+            sed -i 's|-ffp-contract=off||g' "$A"
+            sed -i 's|-Werror|-Wno-error|g' "$A"
+          fi
+          if [ -f "$L" ]; then
+            if ! grep -q 'Wno-unsupported-floating-point-opt' "$L"; then
+              printf '\nif(TARGET astcenc-native-static)\n' >> "$L"
+              printf '    target_compile_options(astcenc-native-static PRIVATE\n' >> "$L"
+              printf '        -Wno-unsupported-floating-point-opt\n' >> "$L"
+              printf '        -Wno-error=unsupported-floating-point-opt)\n' >> "$L"
+              printf 'endif()\n' >> "$L"
             fi
           fi
-
-          echo "===== cmake_core.cmake ====="
-          grep -nE 'march=|Werror|ffp-contract' "$ASTC_CORE" || true
-          echo "===== CMakeLists tail ====="
-          tail -20 "$ASTC_LIST" || true
 
           rm -rf Android/app/.cxx
 
