@@ -56,8 +56,18 @@ jobs:
           if [ -f "$h" ] && [ ! -f "$t" ]; then
             cp "$h" "$t"
           fi
-          grep -n "BOOST_URL" 3rdparty/boost-cmake/CMakeLists.txt 2>/dev/null || true
-          ls -l 3rdparty/mpg123/src/libmpg123/mpg123.h.in 2>/dev/null || true
+          mf=3rdparty/mpg123-cmake/src/libmpg123/CMakeLists.txt
+          if [ -f "$mf" ]; then
+            sed -i '/lfs_alias/d' "$mf"
+          fi
+          cf=3rdparty/CMakeLists.txt
+          if [ -f "$cf" ]; then
+            sed -i 's/PNG_BUILD_ZLIB ON/PNG_BUILD_ZLIB OFF/g' "$cf"
+            sed -i '/add_subdirectory(${CMAKE_SOURCE_DIR}\/3rdparty\/bullet3/d' "$cf"
+            sed -i '/target_link_libraries(3rdparty-bullet3/d' "$cf"
+            sed -i '/target_include_directories(3rdparty-bullet3/d' "$cf"
+          fi
+          echo "patched"
 
       - uses: actions/setup-java@v4
         with:
