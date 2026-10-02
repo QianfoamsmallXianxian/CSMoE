@@ -108,6 +108,13 @@ jobs:
             exit 1
           fi
 
+          astcm=3rdparty/astc-encoder/Source/CMakeLists.txt
+          if [ -f "$astcm" ]; then
+            sed -i 's/-ffp-contract=off//g' "$astcm"
+            sed -i 's/-Werror/-Wno-error/g' "$astcm"
+            echo "astc-encoder CMakeLists patched"
+          fi
+
           echo "patched"
 
       - uses: actions/setup-java@v5
