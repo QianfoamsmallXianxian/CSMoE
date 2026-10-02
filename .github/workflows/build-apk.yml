@@ -2,13 +2,6 @@ name: Build CSMoE APK
 
 on:
   workflow_dispatch:
-    inputs:
-      build_type:
-        description: 'Build type'
-        required: true
-        default: 'debug'
-        type: choice
-        options: [ debug, release, both ]
   push:
     branches: [ main, master ]
   pull_request:
@@ -78,21 +71,6 @@ jobs:
           ANDROID_NDK_ROOT: ${{ steps.setup_ndk.outputs.ndk-path }}
         run: ./gradlew assembleDebug --stacktrace --no-daemon
 
-      - name: Build Release
-        if: ${{ github.event_name == 'workflow_dispatch' && (inputs.build_type == 'release' || inputs.build_type == 'both') && secrets.RELEASE_KEYSTORE_BASE64 != '' }}
-        working-directory: Android
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup_ndk.outputs.ndk-path }}
-          ANDROID_NDK_ROOT: ${{ steps.setup_ndk.outputs.ndk-path }}
-          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: |
-          echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > release.jks
-          export RELEASE_KEYSTORE_PATH="$PWD/release.jks"
-          ./gradlew assembleRelease --stacktrace --no-daemon
-
       - name: Collect APKs
         if: always()
         run: |
@@ -120,13 +98,3 @@ jobs:
             /home/runner/.gradle/daemon/**/daemon-*.out.log
           if-no-files-found: ignore
           retention-days: 7
-
-      - name: Summary
-        if: always()
-        run: |
-          echo "### Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Branch: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
-          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
-          ls -lh artifacts/ 2>/dev/null | tail -n +2 | awk '{print "| " $9 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY || true
