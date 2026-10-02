@@ -16,7 +16,7 @@
 #endif
 
 #include <KeyValues.h>
-#include "filesystem.h"
+#include "FileSystem.h"
 #include <vstdlib/IKeyValuesSystem.h>
 #include "tier0/icommandline.h"
 #include "tier0/vprof_telemetry.h"
