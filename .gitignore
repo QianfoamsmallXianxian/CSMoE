@@ -12,7 +12,10 @@ Android/.gradle/
 Android/build/
 Android/app/build/
 Android/app/.cxx/
+Android/app/release.jks
 *.apk
 *.aab
 *.keystore
 *.jks
+CSMoE-Full/
+*.obb

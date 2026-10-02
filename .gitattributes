@@ -1,4 +1,16 @@
 * text=auto eol=lf
 *.sh text eol=lf
+*.bat text eol=crlf
 *.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+*.jar binary
 *.so binary
+*.a binary
+*.tga binary
+*.astc binary
+*.bsp binary
+*.mdl binary
+*.pak binary

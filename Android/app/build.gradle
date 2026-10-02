@@ -23,7 +23,7 @@ android {
                           "-DXASH_STATIC_GAMELIB=1",
                           "-DANDROID_STL=c++_shared"
                 version "3.18.1"
-                cppFlags "-fexceptions", "-frtti"
+                cppFlags "-fexceptions", "-frtti", "-O2", "-DNDEBUG"
             }
         }
 
@@ -50,6 +50,9 @@ android {
             minifyEnabled false
             debuggable true
             jniDebuggable true
+            ndk {
+                abiFilters 'arm64-v8a'
+            }
         }
         release {
             minifyEnabled false
@@ -57,6 +60,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
             if (hasSigning) {
                 signingConfig signingConfigs.release
+            }
+            ndk {
+                abiFilters 'arm64-v8a'
             }
         }
     }
@@ -78,7 +84,8 @@ android {
     ndkVersion '23.2.8568313'
 
     aaptOptions {
-        noCompress = ['.tga', '.astc', '.png', '.jpg', '.jpeg', '.wav', '.mp3', '.ogg', '.zip']
+        noCompress = ['.tga', '.astc', '.png', '.jpg', '.jpeg',
+                      '.wav', '.mp3', '.ogg', '.zip', '.pk3', '.bsp']
     }
 
     packagingOptions {
@@ -96,7 +103,12 @@ android {
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
-        disable 'MissingTranslation', 'ExpiredTargetSdkVersion'
+        disable 'MissingTranslation', 'ExpiredTargetSdkVersion', 'OldTargetApi'
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+        preDexLibraries false
     }
 
     applicationVariants.all { variant ->

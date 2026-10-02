@@ -20,6 +20,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    timeout-minutes: 120
 
     steps:
       - name: Checkout
@@ -41,8 +42,7 @@ jobs:
         run: yes | sdkmanager --licenses >/dev/null 2>&1 || true
 
       - name: Install CMake and build-tools
-        run: |
-          sdkmanager "cmake;3.18.1" "build-tools;30.0.3" "platforms;android-29"
+        run: sdkmanager "cmake;3.18.1" "build-tools;30.0.3" "platforms;android-29"
 
       - name: Setup NDK r23b
         id: setup_ndk
@@ -58,8 +58,7 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('Android/**/*.gradle*', 'Android/**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
+          restore-keys: gradle-${{ runner.os }}-
 
       - name: Ensure CSMoE-Full
         run: |
@@ -79,13 +78,30 @@ jobs:
           ANDROID_NDK_ROOT: ${{ steps.setup_ndk.outputs.ndk-path }}
         run: ./gradlew assembleDebug --stacktrace --no-daemon
 
+      - name: Build Release
+        if: ${{ github.event_name == 'workflow_dispatch' && (inputs.build_type == 'release' || inputs.build_type == 'both') && secrets.RELEASE_KEYSTORE_BASE64 != '' }}
+        working-directory: Android
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup_ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup_ndk.outputs.ndk-path }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > release.jks
+          export RELEASE_KEYSTORE_PATH="$PWD/release.jks"
+          ./gradlew assembleRelease --stacktrace --no-daemon
+
       - name: Collect APKs
+        if: always()
         run: |
           mkdir -p artifacts
-          find Android/app/build/outputs/apk -name "*.apk" -exec cp {} artifacts/ \; || true
-          ls -lh artifacts/ || true
+          find Android/app/build/outputs/apk -name "*.apk" -exec cp {} artifacts/ \; 2>/dev/null || true
+          ls -lh artifacts/ 2>/dev/null || true
 
       - name: Upload APK
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: CSMoE-apk-${{ github.sha }}
@@ -103,3 +119,14 @@ jobs:
             Android/**/build/outputs/logs/**
             /home/runner/.gradle/daemon/**/daemon-*.out.log
           if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          ls -lh artifacts/ 2>/dev/null | tail -n +2 | awk '{print "| " $9 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY || true
