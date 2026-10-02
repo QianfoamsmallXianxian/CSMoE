@@ -20,7 +20,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NDK_VERSION: "r23b"
   CMAKE_VERSION: "3.18.1"
   BUILD_TOOLS: "30.0.3"
   PLATFORM: "android-29"
