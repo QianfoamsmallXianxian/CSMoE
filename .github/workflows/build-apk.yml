@@ -38,6 +38,15 @@ jobs:
           done
           ls -1 3rdparty/ || true
 
+      - name: Patch boost-cmake
+        run: |
+          f=3rdparty/boost-cmake/CMakeLists.txt
+          [ -f "$f" ] || { echo "no file"; exit 0; }
+          sed -i '/URL_HASH SHA256/d' "$f"
+          sed -i 's|https://boostorg.jfrog.io/artifactory/main/release/1.77.0/source/boost_1_77_0.tar.bz2|https://archives.boost.io/release/1.77.0/source/boost_1_77_0.tar.bz2|g' "$f"
+          echo "=== after patch ==="
+          sed -n '1,20p' "$f"
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
