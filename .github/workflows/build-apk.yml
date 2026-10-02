@@ -110,8 +110,15 @@ jobs:
 
           astcm=3rdparty/astc-encoder/Source/CMakeLists.txt
           if [ -f "$astcm" ]; then
-            sed -i 's/-ffp-contract=off//g' "$astcm"
-            sed -i 's/-Werror/-Wno-error/g' "$astcm"
+            grep -q "Wno-unsupported-floating-point-opt" "$astcm" || \
+            cat >> "$astcm" <<'CMEOF'
+
+if(TARGET astcenc-native-static)
+    target_compile_options(astcenc-native-static PRIVATE
+        -Wno-unsupported-floating-point-opt
+        -Wno-error=unsupported-floating-point-opt)
+endif()
+CMEOF
             echo "astc-encoder CMakeLists patched"
           fi
 
