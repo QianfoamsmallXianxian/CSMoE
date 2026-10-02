@@ -124,6 +124,7 @@ set(SKIP_INSTALL_ALL ON)
 add_library(3rdparty-png INTERFACE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/libpng EXCLUDE_FROM_ALL)
 target_link_libraries(3rdparty-png INTERFACE png_static)
+add_library(PNG::PNG ALIAS png_static)
 target_include_directories(3rdparty-png INTERFACE ${CMAKE_SOURCE_DIR}/3rdparty/libpng ${CMAKE_BINARY_DIR}/3rdparty/libpng)
 
 set(PNG_FOUND ON CACHE BOOL "" FORCE)

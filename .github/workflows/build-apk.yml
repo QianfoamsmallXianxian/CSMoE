@@ -53,24 +53,26 @@ jobs:
             sed -i '/URL_HASH SHA256/d' "$f"
             sed -i 's|boostorg.jfrog.io/artifactory/main/release|archives.boost.io/release|g' "$f"
           fi
+
           h=3rdparty/mpg123/src/include/mpg123.h
           t=3rdparty/mpg123/src/libmpg123/mpg123.h.in
           if [ -f "$h" ] && [ ! -f "$t" ]; then
             cp "$h" "$t"
           fi
+
           mf=3rdparty/mpg123-cmake/src/libmpg123/CMakeLists.txt
           [ -f "$mf" ] && sed -i '/lfs_alias/d' "$mf"
+
           cf=3rdparty/CMakeLists.txt
           if [ -f "$cf" ]; then
             sed -i 's/PNG_BUILD_ZLIB ON/PNG_BUILD_ZLIB OFF/g' "$cf"
             sed -i '/add_subdirectory(${CMAKE_SOURCE_DIR}\/3rdparty\/bullet3/d' "$cf"
             sed -i '/target_link_libraries(3rdparty-bullet3/d' "$cf"
             sed -i '/target_include_directories(3rdparty-bullet3/d' "$cf"
+            grep -q "PNG::PNG ALIAS" "$cf" || \
+              sed -i '/target_link_libraries(3rdparty-png INTERFACE png_static/a add_library(PNG::PNG ALIAS png_static)' "$cf"
           fi
-          echo "patched"
 
-      - name: Comment missing sources
-        run: |
           python3 - <<'PY'
           import os
           for cmake in ["cl_dll/CMakeLists.txt", "dlls/CMakeLists.txt"]:
@@ -91,6 +93,8 @@ jobs:
               open(cmake, "w", encoding="utf-8").write("\n".join(out) + "\n")
               print(f"{cmake}: {n}")
           PY
+
+          echo "patched"
 
       - uses: actions/setup-java@v5
         with:
