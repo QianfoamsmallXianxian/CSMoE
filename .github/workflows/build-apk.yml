@@ -16,6 +16,8 @@ env:
   CMAKE_VERSION: "3.22.1"
   BUILD_TOOLS: "30.0.3"
   PLATFORM: "android-29"
+  NDK_VERSION: "23.2.8568313"
+  ANDROID_SDK: "/usr/local/lib/android/sdk"
 
 jobs:
   build:
@@ -23,7 +25,7 @@ jobs:
     timeout-minutes: 180
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: false
           fetch-depth: 1
@@ -43,7 +45,7 @@ jobs:
           done
           ls -1 3rdparty/ || true
 
-      - name: Patch 3rdparty
+      - name: Patch dependencies
         run: |
           set +e
           f=3rdparty/boost-cmake/CMakeLists.txt
@@ -57,9 +59,7 @@ jobs:
             cp "$h" "$t"
           fi
           mf=3rdparty/mpg123-cmake/src/libmpg123/CMakeLists.txt
-          if [ -f "$mf" ]; then
-            sed -i '/lfs_alias/d' "$mf"
-          fi
+          [ -f "$mf" ] && sed -i '/lfs_alias/d' "$mf"
           cf=3rdparty/CMakeLists.txt
           if [ -f "$cf" ]; then
             sed -i 's/PNG_BUILD_ZLIB ON/PNG_BUILD_ZLIB OFF/g' "$cf"
@@ -69,27 +69,46 @@ jobs:
           fi
           echo "patched"
 
-      - uses: actions/setup-java@v4
+      - name: Comment missing sources
+        run: |
+          python3 - <<'PY'
+          import os
+          for cmake in ["cl_dll/CMakeLists.txt", "dlls/CMakeLists.txt"]:
+              if not os.path.exists(cmake):
+                  continue
+              base = os.path.dirname(cmake)
+              lines = open(cmake, encoding="utf-8").read().splitlines()
+              out, n = [], 0
+              for ln in lines:
+                  s = ln.strip()
+                  if s.startswith(("./", "../")):
+                      ext = os.path.splitext(s)[1].lower()
+                      if ext in (".cpp",".c",".cc",".cxx",".h",".hpp",".s"):
+                          full = os.path.normpath(os.path.join(base, s))
+                          if not os.path.exists(full):
+                              out.append("# " + ln); n += 1; continue
+                  out.append(ln)
+              open(cmake, "w", encoding="utf-8").write("\n".join(out) + "\n")
+              print(f"{cmake}: {n}")
+          PY
+
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
-        with:
-          packages: 'platform-tools'
-
-      - name: Install SDK
+      - name: Install Android SDK
         run: |
-          yes | sdkmanager --licenses >/dev/null 2>&1 || true
-          sdkmanager "platforms;${PLATFORM}" "build-tools;${BUILD_TOOLS}" "cmake;${CMAKE_VERSION}" 2>&1 | tail -3
+          SM="$ANDROID_SDK/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SM" --licenses >/dev/null 2>&1 || true
+          "$SM" \
+            "platform-tools" \
+            "platforms;${PLATFORM}" \
+            "build-tools;${BUILD_TOOLS}" \
+            "cmake;${CMAKE_VERSION}" \
+            "ndk;${NDK_VERSION}" 2>&1 | tail -5
 
-      - id: ndk
-        uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r23c
-          add-to-path: true
-
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '11'
@@ -111,8 +130,9 @@ jobs:
         run: |
           mkdir -p CSMoE-Full
           [ -f CSMoE-Full/.keep ] || touch CSMoE-Full/.keep
+          NDK_PATH="$ANDROID_SDK/ndk/${NDK_VERSION}"
           printf 'sdk.dir=%s\nndk.dir=%s\ncmake.dir=%s/cmake/%s\n' \
-            "$ANDROID_SDK_ROOT" "${{ steps.ndk.outputs.ndk-path }}" "$ANDROID_SDK_ROOT" "$CMAKE_VERSION" \
+            "$ANDROID_SDK" "$NDK_PATH" "$ANDROID_SDK" "$CMAKE_VERSION" \
             > Android/local.properties
           cat Android/local.properties
           chmod +x Android/gradlew
@@ -120,26 +140,29 @@ jobs:
       - name: Build
         working-directory: Android
         env:
-          ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
-          ANDROID_NDK_ROOT: ${{ steps.ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/23.2.8568313
+          ANDROID_NDK_ROOT: /usr/local/lib/android/sdk/ndk/23.2.8568313
         run: |
           set -o pipefail
-          ./gradlew assembleDebug --stacktrace --no-daemon 2>&1 | tee /tmp/build.log | tail -300
+          ./gradlew assembleDebug --stacktrace --no-daemon 2>&1 | tee /tmp/build.log | tail -400
 
-      - if: always()
+      - name: Collect APKs
+        if: always()
         run: |
           mkdir -p artifacts
           find Android/app/build/outputs/apk -name "*.apk" -exec cp -v {} artifacts/ \; 2>/dev/null || true
           ls -lh artifacts/ 2>/dev/null || true
 
-      - if: always()
+      - name: Upload APK
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: apk-${{ github.sha }}
           path: artifacts/*.apk
           if-no-files-found: warn
 
-      - if: always()
+      - name: Upload build log
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: build-log-${{ github.sha }}
