@@ -22,7 +22,7 @@ android {
                           "-DXASH_GL4ES=1",
                           "-DXASH_STATIC_GAMELIB=1",
                           "-DANDROID_STL=c++_shared"
-                version "3.18.1"
+                version "3.22.1"
                 cppFlags "-fexceptions", "-frtti", "-O2", "-DNDEBUG"
             }
         }
@@ -70,7 +70,7 @@ android {
     externalNativeBuild {
         cmake {
             path file('../../CMakeLists.txt')
-            version "3.18.1"
+            version "3.22.1"
         }
     }
 

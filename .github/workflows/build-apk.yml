@@ -50,7 +50,7 @@ jobs:
       - name: Install SDK
         run: |
           yes | sdkmanager --licenses >/dev/null 2>&1 || true
-          sdkmanager "platforms;android-29" "build-tools;30.0.3" "cmake;3.18.1" 2>&1 | tail -3
+          sdkmanager "platforms;android-29" "build-tools;30.0.3" "cmake;3.22.1" 2>&1 | tail -3
 
       - id: ndk
         uses: nttld/setup-ndk@v1
@@ -75,7 +75,7 @@ jobs:
         run: |
           mkdir -p CSMoE-Full
           [ -f CSMoE-Full/.keep ] || touch CSMoE-Full/.keep
-          printf 'sdk.dir=%s\nndk.dir=%s\ncmake.dir=%s/cmake/3.18.1\n' \
+          printf 'sdk.dir=%s\nndk.dir=%s\ncmake.dir=%s/cmake/3.22.1\n' \
             "$ANDROID_SDK_ROOT" "${{ steps.ndk.outputs.ndk-path }}" "$ANDROID_SDK_ROOT" \
             > Android/local.properties
           cat Android/local.properties
