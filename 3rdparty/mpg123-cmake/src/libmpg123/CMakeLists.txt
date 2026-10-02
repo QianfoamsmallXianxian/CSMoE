@@ -61,7 +61,6 @@ add_library(${TARGET}
     "${MPG123_SOURCE_DIR}/src/libmpg123/$<$<NOT:$<BOOL:${NO_LAYER1}>>:layer1.c>"
     "${MPG123_SOURCE_DIR}/src/libmpg123/$<$<NOT:$<OR:$<BOOL:${NO_LAYER1}>,$<BOOL:${NO_LAYER2}>>>:layer2.c>"
     "${MPG123_SOURCE_DIR}/src/libmpg123/$<$<NOT:$<BOOL:${NO_LAYER3}>>:layer3.c>"
-    "${MPG123_SOURCE_DIR}/src/libmpg123/$<$<NOT:$<BOOL:${NO_LFS_ALIAS}>>:lfs_alias.c>"
     "${MPG123_SOURCE_DIR}/src/libmpg123/$<$<NOT:$<BOOL:${NO_NTOM}>>:ntom.c>"
     "${MPG123_SOURCE_DIR}/src/libmpg123/$<$<NOT:$<BOOL:${NO_8BIT}>>:synth_8bit.c>"
     "${MPG123_SOURCE_DIR}/src/libmpg123/$<$<NOT:$<BOOL:${NO_16BIT}>>:synth.c>"
