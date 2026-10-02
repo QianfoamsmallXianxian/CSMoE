@@ -94,6 +94,20 @@ jobs:
               print(f"{cmake}: {n}")
           PY
 
+          astc=3rdparty/astc-encoder/Source/cmake_core.cmake
+          if [ -f "$astc" ]; then
+            sed -i 's|is_clangcl}:-march=native>|is_clangcl}:-march=armv8-a>|g; s|is_gnu_fe}:-march=native>|is_gnu_fe}:-march=armv8-a>|g' "$astc"
+            if grep -q -- '-march=native' "$astc"; then
+              echo "PATCH FAILED: -march=native still present"
+              exit 1
+            fi
+            echo "astc-encoder patched:"
+            grep -n 'march=' "$astc"
+          else
+            echo "PATCH FAILED: cmake_core.cmake not found"
+            exit 1
+          fi
+
           echo "patched"
 
       - uses: actions/setup-java@v5
@@ -122,8 +136,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('Android/**/*.gradle*', 'Android/gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: gradle-${{ runner.os }}-
+          key: gradle-v2-${{ runner.os }}-${{ hashFiles('Android/**/*.gradle*', 'Android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-v2-${{ runner.os }}-
 
       - uses: actions/cache@v4
         with:
@@ -140,6 +154,11 @@ jobs:
             > Android/local.properties
           cat Android/local.properties
           chmod +x Android/gradlew
+
+      - name: Clean stale CMake cache
+        run: |
+          rm -rf Android/app/.cxx
+          rm -rf ~/.gradle/caches/transforms-*
 
       - name: Build
         working-directory: Android
