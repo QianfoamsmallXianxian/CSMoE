@@ -12,10 +12,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  CMAKE_VERSION: "3.22.1"
+  BUILD_TOOLS: "30.0.3"
+  PLATFORM: "android-29"
+
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 90
+    timeout-minutes: 180
 
     steps:
       - uses: actions/checkout@v4
@@ -38,14 +43,21 @@ jobs:
           done
           ls -1 3rdparty/ || true
 
-      - name: Patch boost-cmake
+      - name: Patch 3rdparty
         run: |
+          set +e
           f=3rdparty/boost-cmake/CMakeLists.txt
-          [ -f "$f" ] || { echo "no file"; exit 0; }
-          sed -i '/URL_HASH SHA256/d' "$f"
-          sed -i 's|https://boostorg.jfrog.io/artifactory/main/release/1.77.0/source/boost_1_77_0.tar.bz2|https://archives.boost.io/release/1.77.0/source/boost_1_77_0.tar.bz2|g' "$f"
-          echo "=== after patch ==="
-          sed -n '1,20p' "$f"
+          if [ -f "$f" ]; then
+            sed -i '/URL_HASH SHA256/d' "$f"
+            sed -i 's|boostorg.jfrog.io/artifactory/main/release|archives.boost.io/release|g' "$f"
+          fi
+          h=3rdparty/mpg123/src/include/mpg123.h
+          t=3rdparty/mpg123/src/libmpg123/mpg123.h.in
+          if [ -f "$h" ] && [ ! -f "$t" ]; then
+            cp "$h" "$t"
+          fi
+          grep -n "BOOST_URL" 3rdparty/boost-cmake/CMakeLists.txt 2>/dev/null || true
+          ls -l 3rdparty/mpg123/src/libmpg123/mpg123.h.in 2>/dev/null || true
 
       - uses: actions/setup-java@v4
         with:
@@ -59,7 +71,7 @@ jobs:
       - name: Install SDK
         run: |
           yes | sdkmanager --licenses >/dev/null 2>&1 || true
-          sdkmanager "platforms;android-29" "build-tools;30.0.3" "cmake;3.22.1" 2>&1 | tail -3
+          sdkmanager "platforms;${PLATFORM}" "build-tools;${BUILD_TOOLS}" "cmake;${CMAKE_VERSION}" 2>&1 | tail -3
 
       - id: ndk
         uses: nttld/setup-ndk@v1
@@ -80,21 +92,20 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('Android/**/*.gradle*', 'Android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
+      - uses: actions/cache@v4
+        with:
+          path: 3rdparty/boost_1_77_0
+          key: boost-1.77.0-${{ runner.os }}
+
       - name: Prepare
         run: |
           mkdir -p CSMoE-Full
           [ -f CSMoE-Full/.keep ] || touch CSMoE-Full/.keep
-          printf 'sdk.dir=%s\nndk.dir=%s\ncmake.dir=%s/cmake/3.22.1\n' \
-            "$ANDROID_SDK_ROOT" "${{ steps.ndk.outputs.ndk-path }}" "$ANDROID_SDK_ROOT" \
+          printf 'sdk.dir=%s\nndk.dir=%s\ncmake.dir=%s/cmake/%s\n' \
+            "$ANDROID_SDK_ROOT" "${{ steps.ndk.outputs.ndk-path }}" "$ANDROID_SDK_ROOT" "$CMAKE_VERSION" \
             > Android/local.properties
           cat Android/local.properties
           chmod +x Android/gradlew
-
-      - name: Cache Boost
-        uses: actions/cache@v4
-        with:
-          path: 3rdparty/boost_1_77_0
-          key: boost-1.77.0-${{ runner.os }}
 
       - name: Build
         working-directory: Android
