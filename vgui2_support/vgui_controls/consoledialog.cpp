@@ -15,7 +15,7 @@
 #include <vgui_controls/TextEntry.h>
 #include <vgui_controls/RichText.h>
 
-#include <filesystem.h>
+#include <FileSystem.h>
 
 #if defined( _X360 )
 #include "xbox/xbox_win32stubs.h"

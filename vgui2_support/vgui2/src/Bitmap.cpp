@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <vgui/ISurface.h>
 #include "bitmap.h"
-#include "filesystem.h"
+#include "FileSystem.h"
 #include <tier1/UtlBuffer.h>
 #include <tier0/dbg.h>
 

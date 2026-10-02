@@ -14,7 +14,7 @@
 #include <vgui/ISurface.h>
 #include <tier0/mem.h>
 #include <utlbuffer.h>
-#include "filesystem.h"
+#include "FileSystem.h"
 #include "materialsystem/imaterialsystem.h"
 #include "FontEffects.h"
 #include "vgui_surfacelib/Win32Font.h"

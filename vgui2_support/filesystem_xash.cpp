@@ -22,7 +22,7 @@ GNU General Public License for more details.
 #include <stdarg.h>
 #include <time.h>
 #include <sys/stat.h>
-#include "filesystem.h"
+#include "FileSystem.h"
 
 #include <tier1/strtools.h>
 

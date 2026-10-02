@@ -9,7 +9,7 @@
 #include <vgui_controls/Button.h>
 #include <vgui_controls/ImagePanel.h>
 #include <vgui/KeyCode.h>
-#include <filesystem.h>
+#include <FileSystem.h>
 
 class WeaponImagePanel : public vgui2::ImagePanel
 {

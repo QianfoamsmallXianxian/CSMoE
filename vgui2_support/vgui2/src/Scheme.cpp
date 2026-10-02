@@ -24,7 +24,7 @@
 #include <tier1/UtlSymbol.h>
 #include "Border.h"
 #include "bitmap.h"
-#include "filesystem.h"
+#include "FileSystem.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>

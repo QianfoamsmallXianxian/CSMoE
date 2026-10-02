@@ -40,7 +40,7 @@
 #include "EditablePanel.h"
 #include "MessageBox.h"
 
-#include <filesystem.h>
+#include <FileSystem.h>
 
 #if defined( _X360 )
 #include "xbox/xbox_win32stubs.h"

@@ -18,7 +18,7 @@
 #include <vgui/IInputInternal.h>
 #include <vgui/ISurface.h>
 #include <vgui/ISystem.h>
-#include <filesystem.h>
+#include <FileSystem.h>
 
 #ifdef WIN32
 #include <direct.h>

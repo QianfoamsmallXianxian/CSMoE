@@ -13,7 +13,7 @@
 
 #include <vgui/VGUI.h>
 #include "vgui_surfacelib/FontAmalgam.h"
-#include "filesystem.h"
+#include "FileSystem.h"
 #include "vguifont.h"
 
 #if defined(LINUX) || defined(OSX) || defined(WIN32)

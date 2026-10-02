@@ -14,7 +14,7 @@
 #include "LabeledCommandComboBox.h"
 #include "VControlsListPanel.h"
 #include "ModInfo.h"
-#include "filesystem.h"
+#include "FileSystem.h"
 #include "vgui_controls/MessageBox.h"
 
 #include <KeyValues.h>

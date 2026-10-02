@@ -15,7 +15,7 @@
 #include <vgui/IInputInternal.h>
 #include <vgui/ISystem.h>
 #include <tier1/KeyValues.h>
-#include <filesystem.h>
+#include <FileSystem.h>
 
 // memdbgon must be the last include file in a .cpp file
 #include <tier0/memdbgon.h>
