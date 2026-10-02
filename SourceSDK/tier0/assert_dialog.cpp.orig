@@ -1,6 +1,3 @@
-#if defined(__ANDROID__)
-#undef USE_SDL
-#endif
 //========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
