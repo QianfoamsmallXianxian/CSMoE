@@ -15,6 +15,7 @@ if(XASH_ANGLE)
 	set(VIDEO_OPENGLES OFF CACHE BOOL "" FORCE) # use opengl es2 instead
 endif()
 set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL_STATIC ON CACHE BOOL "" FORCE)
 set(DIRECTX OFF CACHE BOOL "" FORCE) # win10 arm dont have dx8
 set(LIBC ON CACHE BOOL "" FORCE) # win10 arm dont have dx8
 set(HIDAPI OFF CACHE BOOL "" FORCE) # win10 arm dont have dx8
