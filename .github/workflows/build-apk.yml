@@ -2,15 +2,8 @@ name: Build CSMoE APK
 
 on:
   workflow_dispatch:
-    inputs:
-      build_type:
-        description: 'Build type'
-        required: true
-        default: 'debug'
-        type: choice
-        options: [ debug, release ]
   push:
-    branches: [ main, master ]
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -19,15 +12,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  CMAKE_VERSION: "3.18.1"
-  BUILD_TOOLS: "30.0.3"
-  PLATFORM: "android-29"
-
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 180
+    timeout-minutes: 90
 
     steps:
       - uses: actions/checkout@v4
@@ -57,15 +45,12 @@ jobs:
 
       - uses: android-actions/setup-android@v3
 
-      - run: yes | sdkmanager --licenses >/dev/null 2>&1 || true
+      - name: Install SDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platforms;android-29" "build-tools;30.0.3" "cmake;3.18.1" 2>&1 | tail -3
 
-      - run: |
-          sdkmanager \
-            "platforms;${PLATFORM}" \
-            "build-tools;${BUILD_TOOLS}" \
-            "cmake;${CMAKE_VERSION}" 2>&1 | tail -5
-
-      - id: setup_ndk
+      - id: ndk
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r23b
@@ -81,33 +66,27 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('Android/**/*.gradle*', 'Android/**/gradle-wrapper.properties') }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('Android/**/*.gradle*', 'Android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
-      - run: |
+      - name: Prepare
+        run: |
           mkdir -p CSMoE-Full
           [ -f CSMoE-Full/.keep ] || touch CSMoE-Full/.keep
-          cat > Android/local.properties <<EOF
-          sdk.dir=${ANDROID_SDK_ROOT}
-          ndk.dir=${{ steps.setup_ndk.outputs.ndk-path }}
-          cmake.dir=${ANDROID_SDK_ROOT}/cmake/${CMAKE_VERSION}
-          EOF
+          printf 'sdk.dir=%s\nndk.dir=%s\ncmake.dir=%s/cmake/3.18.1\n' \
+            "$ANDROID_SDK_ROOT" "${{ steps.ndk.outputs.ndk-path }}" "$ANDROID_SDK_ROOT" \
+            > Android/local.properties
+          cat Android/local.properties
           chmod +x Android/gradlew
 
-      - name: Build Debug
+      - name: Build
         working-directory: Android
         env:
-          ANDROID_NDK_HOME: ${{ steps.setup_ndk.outputs.ndk-path }}
-          ANDROID_NDK_ROOT: ${{ steps.setup_ndk.outputs.ndk-path }}
-        run: ./gradlew assembleDebug --stacktrace --no-daemon 2>&1 | tee /tmp/build.log
-
-      - name: Build Release
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.build_type == 'release' }}
-        working-directory: Android
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup_ndk.outputs.ndk-path }}
-          ANDROID_NDK_ROOT: ${{ steps.setup_ndk.outputs.ndk-path }}
-        run: ./gradlew assembleRelease --stacktrace --no-daemon 2>&1 | tee -a /tmp/build.log
+          ANDROID_NDK_HOME: ${{ steps.ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.ndk.outputs.ndk-path }}
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --stacktrace --no-daemon 2>&1 | tee /tmp/build.log | tail -300
 
       - if: always()
         run: |
@@ -118,17 +97,13 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: CSMoE-apk-${{ github.sha }}
+          name: apk-${{ github.sha }}
           path: artifacts/*.apk
           if-no-files-found: warn
-          retention-days: 30
 
       - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-logs-${{ github.sha }}
-          path: |
-            /tmp/build.log
-            Android/**/build/reports/**
+          name: build-log-${{ github.sha }}
+          path: /tmp/build.log
           if-no-files-found: ignore
-          retention-days: 14
