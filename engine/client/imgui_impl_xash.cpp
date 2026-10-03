@@ -38,7 +38,6 @@ GNU General Public License for more details.
 
 #ifdef XASH_SDL
 #include <SDL.h>
-#include <SDL_syswm.h>
 #endif
 
 #ifdef XASH_WINRT
@@ -461,9 +460,11 @@ qboolean ImGui_ImplGL_CreateDeviceObjects(void)
 
 	// fix IME
 #ifdef XASH_SDL
-	SDL_SysWMinfo wmInfo;
+	#if !defined(__ANDROID__)
+SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
 	SDL_GetWindowWMInfo(host.hWnd, &wmInfo);
+#endif
 #if defined _WIN32 && !defined XASH_WINRT
 	io.ImeWindowHandle = wmInfo.info.win.window;
 	io.ImeSetInputScreenPosFn; // use default

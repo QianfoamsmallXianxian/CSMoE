@@ -30,7 +30,6 @@ GNU General Public License for more details.
 #endif
 #ifdef XASH_SDL
 #include <SDL.h>
-#include <SDL_syswm.h>
 #ifdef __ANDROID__
 #include <EGL/egl.h>
 #endif

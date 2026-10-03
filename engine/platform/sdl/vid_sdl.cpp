@@ -22,7 +22,9 @@ GNU General Public License for more details.
 #include "input_ime.h"
 #include "gl_vidnt.h"
 #include <SDL.h>
+#if !defined(__ANDROID__)
 #include <SDL_syswm.h>
+#endif
 
 #ifdef XASH_EGL
 #include <EGL/egl.h>

@@ -19,7 +19,9 @@ GNU General Public License for more details.
 #include "mod_local.h"
 #include "gl_vidnt.h"
 #include <SDL.h>
+#if !defined(__ANDROID__)
 #include <SDL_syswm.h>
+#endif
 #ifdef XASH_NANOGL
 #include <GL/nanogl.h>
 #endif

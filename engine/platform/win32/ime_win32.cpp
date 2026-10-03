@@ -20,7 +20,9 @@ GNU General Public License for more details.
 #include <WinUser.h>
 #include <SDL.h>
 #include <SDL3/SDL_version.h>
+#if !defined(__ANDROID__)
 #include <SDL_syswm.h>
+#endif
 #include <commctrl.h>
 #include <string>
 #include <vector>
