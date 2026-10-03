@@ -10,7 +10,7 @@
 #include <vgui/IKeyValues.h>
 #include <tier1/KeyValues.h>
 #include <FileSystem.h>
-#include "controls.h"
+#include "Controls.h"
 
 IKeyValues* g_pKeyValuesInterface = nullptr;
 IFileSystem *g_pFullFileSystem = nullptr;

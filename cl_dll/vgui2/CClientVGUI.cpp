@@ -9,7 +9,7 @@
 #include <vgui_controls/Frame.h>
 
 #include <vgui/ISurface.h>
-#include <IEngineVgui.h>
+#include <IEngineVGui.h>
 #include "CHudViewport.h"
 
 #include <vgui_controls/Controls.h>

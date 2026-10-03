@@ -2,7 +2,7 @@
 #define CBASEUI_H
 
 #include "IBaseUI.h"
-#include "IEngineVgui.h"
+#include "IEngineVGui.h"
 
 class CBaseUI : public IBaseUI {
 public:
