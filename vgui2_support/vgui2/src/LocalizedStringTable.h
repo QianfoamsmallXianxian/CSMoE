@@ -4,7 +4,7 @@
 #include <cstdarg>
 
 #include <tier1/utlrbtree.h>
-#include <tier1/UtlSymbol.h>
+#include <tier1/utlsymbol.h>
 #include <tier1/utlvector.h>
 
 #include <vgui/ILocalize.h>

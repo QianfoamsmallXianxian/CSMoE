@@ -11,7 +11,7 @@
 #include <vgui/ISurface.h>
 #include "bitmap.h"
 #include "FileSystem.h"
-#include <tier1/UtlBuffer.h>
+#include <tier1/utlbuffer.h>
 #include <tier0/dbg.h>
 
 #include <vgui_controls/Controls.h>

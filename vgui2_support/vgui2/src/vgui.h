@@ -2,7 +2,7 @@
 #define VGUI2_SRC_VGUI_H
 
 #include <tier1/utllinkedlist.h>
-#include <tier1/UtlPriorityQueue.h>
+#include <tier1/utlpriorityqueue.h>
 
 #include <vgui/VGUI.h>
 #include <vgui/IInputInternal.h>

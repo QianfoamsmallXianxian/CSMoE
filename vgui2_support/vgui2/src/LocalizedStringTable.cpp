@@ -1,6 +1,6 @@
 #include <FileSystem.h>
 #include <UnicodeFileHelpers.h>
-#include <tier1/UtlSymbol.h>
+#include <tier1/utlsymbol.h>
 #include <tier1/KeyValues.h>
 #include <vgui/ISurface.h>
 #include <vgui/ISystem.h>
