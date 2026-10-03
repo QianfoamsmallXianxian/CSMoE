@@ -23,9 +23,9 @@ GNU General Public License for more details.
 #endif
 
 #ifdef XASH_SDL
-#include <SDL_timer.h>
-#include <SDL_clipboard.h>
-#include <SDL_video.h>
+#include <SDL3/SDL_timer.h>
+#include <SDL3/SDL_clipboard.h>
+#include <SDL3/SDL_video.h>
 #else
 #include <time.h>
 #endif

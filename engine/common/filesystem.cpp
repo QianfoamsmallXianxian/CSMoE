@@ -21,8 +21,8 @@ GNU General Public License for more details.
 #include "mathlib.h"
 
 #ifdef XASH_SDL
-#include <SDL_system.h> // Android External storage
-#include <SDL_filesystem.h> // Android External storage
+#include <SDL3/SDL_system.h> // Android External storage
+#include <SDL3/SDL_filesystem.h> // Android External storage
 #endif
 #include "fs_io.h"
 #include "fs_impl.h"

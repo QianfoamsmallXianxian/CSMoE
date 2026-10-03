@@ -21,7 +21,7 @@ GNU General Public License for more details.
 #include <android/log.h>
 #include <android/asset_manager_jni.h>
 
-#include "SDL_system.h"
+#include <SDL3/SDL_system.h>
 
 #include "tier1/strtools.h"
 

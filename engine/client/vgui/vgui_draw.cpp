@@ -30,7 +30,7 @@ int	g_iBoundTexture;
 static enum VGUI_KeyCode s_pVirtualKeyTrans[256];
 static enum VGUI_DefaultCursor s_currentCursor;
 #ifdef XASH_SDL
-#include <SDL_events.h>
+#include <SDL3/SDL_events.h>
 #include "platform/sdl/events.h"
 static SDL_Cursor* s_pDefaultCursor[20];
 #endif

@@ -31,7 +31,7 @@ GNU General Public License for more details.
 #include <time.h>
 
 #ifdef XASH_SDL
-#include <SDL_messagebox.h>
+#include <SDL3/SDL_messagebox.h>
 
 #define MSGBOX( x )		SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "CSMoE Error", x, NULL )
 #define MSGBOX2( x )	SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "Host Error", x, NULL )

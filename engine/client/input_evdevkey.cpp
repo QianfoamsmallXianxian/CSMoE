@@ -19,7 +19,7 @@ GNU General Public License for more details.
 #include <linux/input.h>
 #include "keydefs.h"
 #ifdef XASH_SDL
-#include <SDL_keyboard.h>
+#include <SDL3/SDL_keyboard.h>
 
 
 static SDL_Scancode EVDEV_Keycodes[] = {

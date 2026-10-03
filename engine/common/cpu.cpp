@@ -3,7 +3,7 @@
 #endif
 
 #ifdef XASH_SDL
-#include <SDL_cpuinfo.h>
+#include <SDL3/SDL_cpuinfo.h>
 #endif
 
 void Cpu_Init(void)

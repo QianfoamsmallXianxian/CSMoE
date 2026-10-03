@@ -126,7 +126,7 @@ int dladdr( const void *addr, Dl_info *info )
 
 #endif
 #ifdef XASH_SDL
-#include <SDL_filesystem.h>
+#include <SDL3/SDL_filesystem.h>
 #endif
 
 #if TARGET_OS_IPHONE

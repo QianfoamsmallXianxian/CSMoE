@@ -18,7 +18,7 @@ GNU General Public License for more details.
 #include "gl_vidnt.h"
 
 #ifdef XASH_SDL
-#include <SDL_keyboard.h>
+#include <SDL3/SDL_keyboard.h>
 #include <platform/sdl/events.h>
 #endif
 

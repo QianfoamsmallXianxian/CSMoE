@@ -19,7 +19,7 @@ GNU General Public License for more details.
 
 #include <WinUser.h>
 #include <SDL.h>
-#include <SDL_version.h>
+#include <SDL3/SDL_version.h>
 #include <SDL_syswm.h>
 #include <commctrl.h>
 #include <string>

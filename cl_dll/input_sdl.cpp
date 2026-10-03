@@ -23,8 +23,8 @@
 #include "view.h"
 #include "input.h"
 
-#include <SDL_mouse.h>
-#include <SDL_gamecontroller.h>
+#include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL_gamepad.h>
 
 #define MOUSE_BUTTON_COUNT 5
 
