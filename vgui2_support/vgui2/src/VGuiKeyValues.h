@@ -2,7 +2,7 @@
 #define VGUI2_SRC_VGUIKEYVALUES_H
 
 #include <tier1/MemPool.h>
-#include <tier1/UtlRBTree.h>
+#include <tier1/utlrbtree.h>
 #include <tier1/utlvector.h>
 
 #include <vgui/IKeyValues.h>

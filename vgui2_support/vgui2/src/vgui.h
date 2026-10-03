@@ -1,7 +1,7 @@
 #ifndef VGUI2_SRC_VGUI_H
 #define VGUI2_SRC_VGUI_H
 
-#include <tier1/UtlLinkedList.h>
+#include <tier1/utllinkedlist.h>
 #include <tier1/UtlPriorityQueue.h>
 
 #include <vgui/VGUI.h>

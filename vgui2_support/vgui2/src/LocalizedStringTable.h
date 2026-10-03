@@ -3,7 +3,7 @@
 
 #include <cstdarg>
 
-#include <tier1/UtlRBTree.h>
+#include <tier1/utlrbtree.h>
 #include <tier1/UtlSymbol.h>
 #include <tier1/utlvector.h>
 

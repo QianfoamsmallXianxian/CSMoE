@@ -1,7 +1,7 @@
 #ifndef VGUI2_SRC_INPUT_H
 #define VGUI2_SRC_INPUT_H
 
-#include <tier1/UtlLinkedList.h>
+#include <tier1/utllinkedlist.h>
 #include <vgui/IInputInternal.h>
 
 namespace vgui2

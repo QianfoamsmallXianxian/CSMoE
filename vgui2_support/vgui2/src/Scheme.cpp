@@ -20,7 +20,7 @@
 
 #include <tier1/KeyValues.h>
 #include <tier1/utlvector.h>
-#include <tier1/UtlRBTree.h>
+#include <tier1/utlrbtree.h>
 #include <tier1/UtlSymbol.h>
 #include "Border.h"
 #include "bitmap.h"
