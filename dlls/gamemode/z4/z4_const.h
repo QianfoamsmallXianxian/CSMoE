@@ -43,7 +43,7 @@ Z4_MIDNIGHTDOWN,
 Z4_MAX_STATUS,
 };
 
-enum Z4StatusDraw
+enum Z4StatusIconDraw
 {
 Z4_ICON_SHOW = 0,
 Z4_ICON_FLASH,
