@@ -148,3 +148,5 @@ target_link_libraries(vgui2_support PRIVATE vgui_surfacelib)
 target_link_libraries(vgui2_support PRIVATE vguimatsurface)
 target_link_libraries(vgui2_support PRIVATE dead_wrapper)
 target_link_libraries(vgui2_support PRIVATE tier0 tier1 vstdlib mathlib)
+
+target_include_directories(vgui2 PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/SDL2/include)

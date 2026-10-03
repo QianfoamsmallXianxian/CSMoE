@@ -23,7 +23,7 @@
 #include <tier1/utlrbtree.h>
 #include <tier1/utlsymbol.h>
 #include "Border.h"
-#include "bitmap.h"
+#include "Bitmap.h"
 #include "FileSystem.h"
 
 // memdbgon must be the last include file in a .cpp file!!!

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vgui/ISurface.h>
-#include "bitmap.h"
+#include "Bitmap.h"
 #include "FileSystem.h"
 #include <tier1/utlbuffer.h>
 #include <tier0/dbg.h>
