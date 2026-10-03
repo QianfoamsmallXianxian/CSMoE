@@ -29,7 +29,7 @@ Z4_SKILL_DASH = 0,
 Z4_SKILL_ACCSHOOT,
 };
 
-enum Z4StatusIcon
+enum Z4Status
 {
 Z4_SPEEDUP = 0,
 Z4_SPEEDDOWN,
@@ -43,7 +43,7 @@ Z4_MIDNIGHTDOWN,
 Z4_MAX_STATUS,
 };
 
-enum Z4IconDisplay
+enum Z4StatusDraw
 {
 Z4_ICON_SHOW = 0,
 Z4_ICON_FLASH,
